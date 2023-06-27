@@ -13,45 +13,45 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.studentservice.models.User;
-import com.example.studentservice.repositories.UserRepository;
+import com.example.studentservice.models.Student;
+import com.example.studentservice.repositories.StudentRepository;
 
 @Service
-public class UserService {
+public class StudentService {
 
-  private final UserRepository userRepository;
+  private final StudentRepository studentRepository;
 
-  public UserService(UserRepository userRepository){
-    this.userRepository = userRepository;
+  public StudentService(StudentRepository studentRepository){
+    this.studentRepository = studentRepository;
   }
 
-  public List<User> allUsers(){
-    return userRepository.findAll();
+  public List<Student> allStudents(){
+    return studentRepository.findAll();
   }
 
-  public User getById(Long id){
-    Optional <User> optionalUser = userRepository.findById(id);
-    if (optionalUser.isPresent()){
-      User user = optionalUser.get();
-      return user;
+  public Student getById(Long id){
+    Optional <Student> optionalStudent = studentRepository.findById(id);
+    if (optionalStudent.isPresent()){
+      Student student = optionalStudent.get();
+      return student;
     }
     return null;
   }
 
   public void deleteById(Long id){
-    userRepository.deleteById(id);
+    studentRepository.deleteById(id);
   }
 
-  public User update(Long id,User user){
-    User existedUser = getById(id);
-    if (existedUser == null)
+  public Student update(Long id,Student student){
+    Student existedStudent = getById(id);
+    if (existedStudent == null)
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    BeanUtils.copyProperties(user, existedUser, getNullPropertyNames(user));
-    return userRepository.save(existedUser);
+    BeanUtils.copyProperties(student, existedStudent, getNullPropertyNames(student));
+    return studentRepository.save(existedStudent);
   }
 
-  public User createUser(User user){
-   return userRepository.save(user);
+  public Student createStudent(Student student){
+   return studentRepository.save(student);
   }
 
   private String[] getNullPropertyNames(Object source) {

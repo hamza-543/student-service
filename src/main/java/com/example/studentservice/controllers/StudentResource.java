@@ -12,43 +12,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.studentservice.models.User;
-import com.example.studentservice.services.UserService;
+import com.example.studentservice.models.Student;
+import com.example.studentservice.services.StudentService;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-public class UserResource {
+public class StudentResource {
 
-  private final UserService userService;
+  private final StudentService userService;
 
-  @GetMapping("/users")
-  public List<User> index(){
-    return userService.allUsers();
+  @GetMapping("/students")
+  public List<Student> index(){
+    return userService.allStudents();
   }
   
-  @PostMapping("/users")
-  public User createUser(@RequestBody User requestBody){
-    return userService.createUser(requestBody);
+  @PostMapping("/students")
+  public Student createUser(@RequestBody Student requestBody){
+    return userService.createStudent(requestBody);
   }
 
-  @GetMapping("/users/{id}")
-  public User get(@PathVariable String id){
-    User user =  userService.getById(Long.parseLong(id));
+  @GetMapping("/students/{id}")
+  public Student get(@PathVariable String id){
+    Student user =  userService.getById(Long.parseLong(id));
     if (user == null)
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return user;
   }
 
-  @DeleteMapping("/users/{id}")
+  @DeleteMapping("/students/{id}")
   public String getUser(@PathVariable long id){
     userService.deleteById(id);
     return "User successfully deleted";
   }
 
-  @PatchMapping("/users/{id}")
-  public User update(@PathVariable long id, @RequestBody User user){
+  @PatchMapping("/students/{id}")
+  public Student update(@PathVariable long id, @RequestBody Student user){
     return userService.update(id, user);
   }
 
