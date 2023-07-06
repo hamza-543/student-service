@@ -2,7 +2,9 @@ package com.example.studentservice.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.studentservice.dto.AddressDto;
 import com.example.studentservice.models.Student;
 import com.example.studentservice.services.StudentService;
 
@@ -22,6 +26,8 @@ import lombok.AllArgsConstructor;
 public class StudentResource {
 
   private final StudentService userService;
+  @Autowired
+  private WebClient.Builder webClientBuilder;
 
   @GetMapping("/students")
   public List<Student> index(){
@@ -30,6 +36,13 @@ public class StudentResource {
   
   @PostMapping("/students")
   public Student createUser(@RequestBody Student requestBody){
+    // Address address1 = new Address(null, "30000","Lahore", "Pakistan");
+    // Address address = webClientBuilder.build().post()
+    // .uri("http://ADDRESS-SERVICE/addresses")
+    // .bodyValue(address1) // Provide the request body
+    //         .retrieve()
+    //                 .bodyToMono(Address.class).block();
+    // return address;
     return userService.createStudent(requestBody);
   }
 
@@ -39,6 +52,17 @@ public class StudentResource {
     if (user == null)
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return user;
+  }
+
+  @GetMapping("/students/test/{id}")
+  public ResponseEntity getTest(@PathVariable String id){
+
+    AddressDto address = webClientBuilder.build().get()
+    .uri("http://ADDRESS-SERVICE/addresses/1")
+            .retrieve()
+            .bodyToMono(AddressDto.class)
+            .block();
+    return new ResponseEntity<>(address, HttpStatus.OK);
   }
 
   @DeleteMapping("/students/{id}")
