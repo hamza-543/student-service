@@ -1,28 +1,30 @@
 package com.example.studentservice.services;
 
 import java.beans.PropertyDescriptor;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import org.springframework.http.ResponseEntity;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.studentservice.dto.AddressDto;
 import com.example.studentservice.models.Student;
 import com.example.studentservice.repositories.StudentRepository;
 
 @Service
 public class StudentService {
-
   private final StudentRepository studentRepository;
+  private final ApiClient apiClient;
 
-  public StudentService(StudentRepository studentRepository){
+  public StudentService(StudentRepository studentRepository, ApiClient apiClient){
     this.studentRepository = studentRepository;
+    this.apiClient = apiClient;
   }
 
   public List<Student> allStudents(){
@@ -70,5 +72,11 @@ public class StudentService {
 
     String[] result = new String[nullNames.size()];
     return nullNames.toArray(result);
+  }
+
+  public List<AddressDto> getStudentAddresses(Long studentId) {
+    String url = "http://ADDRESS-SERVICE/addresses";
+    List<AddressDto> addressList = apiClient.get(url, AddressDto[].class);
+    return addressList;
   }
 }
