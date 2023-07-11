@@ -3,14 +3,11 @@ package com.example.studentservice.services;
 import java.beans.PropertyDescriptor;
 import java.util.*;
 
-import org.springframework.http.ResponseEntity;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.studentservice.dto.AddressDto;
@@ -53,7 +50,7 @@ public class StudentService {
   }
 
   public Student createStudent(Student student){
-   return studentRepository.save(student);
+    return studentRepository.save(student);
   }
 
   private String[] getNullPropertyNames(Object source) {
@@ -74,9 +71,30 @@ public class StudentService {
     return nullNames.toArray(result);
   }
 
+  public boolean isRecordCreated(Long id) {
+    return studentRepository.existsById(id);
+  }
+
   public List<AddressDto> getStudentAddresses(Long studentId) {
     String url = "http://ADDRESS-SERVICE/addresses";
-    List<AddressDto> addressList = apiClient.get(url, AddressDto[].class);
+    List<AddressDto> addressList = apiClient.getList(url, AddressDto[].class);
     return addressList;
+  }
+
+  public List<AddressDto> createStudentAddresses(Long studentId, List<AddressDto> addresses) {
+    String url = "http://ADDRESS-SERVICE/addresses/bulk";
+    // inject student id
+    for (AddressDto address : addresses) {
+      address.setStudent_id(studentId);
+    }
+
+    List<AddressDto> addressList = apiClient.postList(url, AddressDto[].class, addresses);
+    return addressList;
+  }
+
+  public AddressDto createStudentAddress(AddressDto addressDto) {
+    String url = "http://ADDRESS-SERVICE/addresses";
+    AddressDto responseAddress = apiClient.post(url, AddressDto.class, addressDto);
+    return responseAddress;
   }
 }

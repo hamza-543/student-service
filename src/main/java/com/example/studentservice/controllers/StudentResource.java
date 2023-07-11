@@ -3,7 +3,6 @@ package com.example.studentservice.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,13 +34,19 @@ public class StudentResource {
   }
   
   @PostMapping("/students")
-  public Student createUser(@RequestBody Student requestBody){
-    return userService.createStudent(requestBody);
+  public StudentAddressDto createUser(@RequestBody StudentAddressDto requestBody){
+    Student student = userService.createStudent(requestBody.getStudent());
+    if (student == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    List<AddressDto> addressList = userService.createStudentAddresses(student.getId(), requestBody.getAddresses());
+    StudentAddressDto studentAddressDto = new StudentAddressDto(student, addressList);
+    return studentAddressDto;
   }
 
   @GetMapping("/students/{id}")
   public StudentAddressDto get(@PathVariable String id){
-    Student user =  userService.getById(Long.parseLong(id));
+    Student user = userService.getById(Long.parseLong(id));
     List<AddressDto> addressList = userService.getStudentAddresses(1l);
     StudentAddressDto studentAddressDto = new StudentAddressDto(user, addressList);
     if (user == null || studentAddressDto == null)

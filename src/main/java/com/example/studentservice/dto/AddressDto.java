@@ -16,6 +16,8 @@ public class AddressDto {
   //should be a enum
   private String city;
   private String country;
+  // foreign key
+  private Long student_id;
 }
 
 

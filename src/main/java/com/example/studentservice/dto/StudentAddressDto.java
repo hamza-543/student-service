@@ -1,5 +1,6 @@
 package com.example.studentservice.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.studentservice.models.Student;
@@ -16,6 +17,7 @@ import lombok.Setter;
 public class StudentAddressDto {
 
   private Student student;
-  private List<AddressDto> addresses;
+  // if List of Address missing while requesting
+  private List<AddressDto> addresses = new ArrayList<>();
 
 }
