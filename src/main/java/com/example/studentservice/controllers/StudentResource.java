@@ -25,44 +25,44 @@ import lombok.AllArgsConstructor;
 
 public class StudentResource {
 
-  private final StudentService userService;
+  private final StudentService studentService;
   private WebClient.Builder webClientBuilder;
 
   @GetMapping("/students")
   public List<Student> index(){
-    return userService.allStudents();
+    return studentService.allStudents();
   }
   
   @PostMapping("/students")
-  public StudentAddressDto createUser(@RequestBody StudentAddressDto requestBody){
-    Student student = userService.createStudent(requestBody.getStudent());
+  public StudentAddressDto createStudent(@RequestBody StudentAddressDto requestBody){
+    Student student = studentService.createStudent(requestBody.getStudent());
     if (student == null){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-    List<AddressDto> addressList = userService.createStudentAddresses(student.getId(), requestBody.getAddresses());
+    List<AddressDto> addressList = studentService.createStudentAddresses(student.getId(), requestBody.getAddresses());
     StudentAddressDto studentAddressDto = new StudentAddressDto(student, addressList);
     return studentAddressDto;
   }
 
   @GetMapping("/students/{id}")
   public StudentAddressDto get(@PathVariable String id){
-    Student user = userService.getById(Long.parseLong(id));
-    List<AddressDto> addressList = userService.getStudentAddresses(1l);
-    StudentAddressDto studentAddressDto = new StudentAddressDto(user, addressList);
-    if (user == null || studentAddressDto == null)
+    Student student = studentService.getById(Long.parseLong(id));
+    List<AddressDto> addressList = studentService.getStudentAddresses(1l);
+    StudentAddressDto studentAddressDto = new StudentAddressDto(student, addressList);
+    if (student == null || studentAddressDto == null)
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return studentAddressDto;
   }
 
   @DeleteMapping("/students/{id}")
-  public String getUser(@PathVariable long id){
-    userService.deleteById(id);
-    return "User successfully deleted";
+  public String getStudent(@PathVariable long id){
+    studentService.deleteById(id);
+    return "Student successfully deleted";
   }
 
   @PatchMapping("/students/{id}")
-  public Student update(@PathVariable long id, @RequestBody Student user){
-    return userService.update(id, user);
+  public Student update(@PathVariable long id, @RequestBody Student student){
+    return studentService.update(id, student);
   }
 
 }
