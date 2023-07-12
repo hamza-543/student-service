@@ -17,7 +17,7 @@ public class AddressDto {
   private String city;
   private String country;
   // foreign key
-  private Long student_id;
+  private Long studentId;
 }
 
 

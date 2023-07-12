@@ -45,9 +45,9 @@ public class StudentController {
   }
 
   @GetMapping("/students/{id}")
-  public StudentAddressDto get(@PathVariable String id){
-    Student student = studentService.getById(Long.parseLong(id));
-    List<AddressDto> addressList = studentService.getStudentAddresses(1l);
+  public StudentAddressDto get(@PathVariable Long id){
+    Student student = studentService.getById(id);
+    List<AddressDto> addressList = studentService.getStudentAddresses(id);
     StudentAddressDto studentAddressDto = new StudentAddressDto(student, addressList);
     if (student == null || studentAddressDto == null)
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);

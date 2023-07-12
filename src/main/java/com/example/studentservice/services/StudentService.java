@@ -89,7 +89,7 @@ public class StudentService {
     String url = "http://ADDRESS-SERVICE/addresses/bulk";
     // inject student id
     for (AddressDto address : addresses) {
-      address.setStudent_id(studentId);
+      address.setStudentId(studentId);
     }
 
     List<AddressDto> addressList = apiClient.postList(url, AddressDto[].class, addresses);
