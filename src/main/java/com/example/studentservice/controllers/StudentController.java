@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 
-public class StudentResource {
+public class StudentController {
 
   private final StudentService studentService;
   private WebClient.Builder webClientBuilder;

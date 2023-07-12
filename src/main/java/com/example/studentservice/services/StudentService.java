@@ -76,8 +76,12 @@ public class StudentService {
   }
 
   public List<AddressDto> getStudentAddresses(Long studentId) {
-    String url = "http://ADDRESS-SERVICE/addresses";
-    List<AddressDto> addressList = apiClient.getList(url, AddressDto[].class);
+    String url = "http://ADDRESS-SERVICE/student_addresses";
+    HashMap<String, Object> options = new HashMap<>();
+    String queryParams = "student_id=" + studentId;
+    options.put("queryParams", queryParams);
+
+    List<AddressDto> addressList = apiClient.getList(url, AddressDto[].class, options);
     return addressList;
   }
 
