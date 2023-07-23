@@ -3,6 +3,7 @@ package com.example.studentservice.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,9 +56,13 @@ public class StudentController {
   }
 
   @DeleteMapping("/students/{id}")
-  public String getStudent(@PathVariable long id){
-    studentService.deleteById(id);
-    return "Student successfully deleted";
+  public ResponseEntity<String> deleteStudent(@PathVariable long id){
+    boolean isDeleted = studentService.deleteById(id);
+
+    if (isDeleted)
+      return ResponseEntity.status(HttpStatus.OK).body("Record successfully deleted");
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No record found");
   }
 
   @PatchMapping("/students/{id}")

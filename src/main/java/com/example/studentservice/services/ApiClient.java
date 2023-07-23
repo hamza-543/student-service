@@ -2,6 +2,7 @@ package com.example.studentservice.services;
 
 import java.util.*;
 
+import com.example.studentservice.dto.AddressDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -127,4 +128,53 @@ public class ApiClient {
   }
 
   // block postList end
+
+  // block patch start
+  public <T, R> T patch(String url, Class<T> responseType, R requestBody) {
+    Map<String, Object> options = new HashMap<>();
+
+    options.put("requestFormat", MediaType.APPLICATION_JSON);
+    options.put("acceptFormat", MediaType.APPLICATION_JSON);
+
+    return this.patch(url, responseType, requestBody, options);
+  }
+
+  public <T, R> T patch(String url, Class<T> responseType, R requestBody, Map<String, Object> options) {
+    MediaType requestFormat = options.get("requestFormat") != null ? (MediaType) options.get("requestFormat") : MediaType.APPLICATION_JSON;
+    MediaType acceptFormat = options.get("acceptFormat") != null ? (MediaType) options.get("acceptFormat") : MediaType.APPLICATION_JSON;
+
+    T data = webClientBuilder.build().patch()
+            .uri(url)
+            .accept(acceptFormat)
+            .contentType(requestFormat)
+            .body(BodyInserters.fromValue(requestBody))
+            .retrieve()
+            .bodyToMono(responseType)
+            .block();
+
+    return data;
+  }
+  // block patch end
+
+  // block delete start
+  public <T, R> T delete(String url, Class<T> responseType) {
+    Map<String, Object> options = new HashMap<>();
+
+    options.put("acceptFormat", MediaType.APPLICATION_JSON);
+
+    return this.delete(url, responseType, options);
+  }
+  public <T, R> T delete(String url, Class<T> responseType, Map<String, Object> options) {
+    MediaType acceptFormat = options.get("acceptFormat") != null ? (MediaType) options.get("acceptFormat") : MediaType.APPLICATION_JSON;
+
+    T data = webClientBuilder.build().delete()
+            .uri(url)
+            .accept(acceptFormat)
+            .accept(acceptFormat)
+            .retrieve()
+            .bodyToMono(responseType)
+            .block();
+    return data;
+  }
 }
+// block delete end

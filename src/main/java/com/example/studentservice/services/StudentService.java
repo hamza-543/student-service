@@ -37,8 +37,14 @@ public class StudentService {
     return null;
   }
 
-  public void deleteById(Long id){
-    studentRepository.deleteById(id);
+  public boolean deleteById(Long id){
+    // now use a hack to get user id first after that found better way
+    Student student = getById(id);
+    if (student != null){
+      studentRepository.deleteById(id);
+      return true;
+    }
+    return false;
   }
 
   public Student update(Long id,Student student){
@@ -100,5 +106,17 @@ public class StudentService {
     String url = "http://ADDRESS-SERVICE/addresses";
     AddressDto responseAddress = apiClient.post(url, AddressDto.class, addressDto);
     return responseAddress;
+  }
+
+  public AddressDto updateAddress(AddressDto addressDto) {
+    String url = "http://ADDRESS-SERVICE/addresses/"+addressDto.getId();
+    AddressDto responseAddress = apiClient.patch(url, AddressDto.class, addressDto);
+    return responseAddress;
+  }
+
+  public String deleteAddress(AddressDto addressDto) {
+    String url = "http://ADDRESS-SERVICE/addresses/"+addressDto.getId();
+    String response = apiClient.delete(url, String.class);
+    return response;
   }
 }
